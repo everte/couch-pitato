@@ -7,7 +7,7 @@ defmodule UiWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_ui_key",
-    signing_salt: "vxOtAzE1"
+    signing_salt: "UnLelkVl"
   ]
 
   socket "/socket", UiWeb.UserSocket,
