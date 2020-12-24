@@ -11,8 +11,10 @@ defmodule Ui.Application do
       UiWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: Ui.PubSub},
+
       # Start the Endpoint (http/https)
-      UiWeb.Endpoint
+      UiWeb.Endpoint,
+      Ui
       # Start a worker by calling: Ui.Worker.start_link(arg)
       # {Ui.Worker, arg}
     ]
