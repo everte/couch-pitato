@@ -9,27 +9,62 @@ defmodule Ui do
 
   use GenServer
 
-  @server   Ui.PubSub
+  @server Ui.PubSub
   @channel "events"
+  @max_val 255
+  @min_val 0
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, :ok, opts)
   end
 
 
+  # Todo:
+  # Configuration write and read from file:
+  # File.write!("test.txt", :erlang.term_to_binary(map))
+  #  File.read!("test.txt") |> :erlang.binary_to_term
+
+  # /data dir is persisted between reboots on nerves
+  # use some kind of config to make that work :)
+  #
+
   def init(:ok) do
     IO.puts("Init")
+    # read the config
     Phoenix.PubSub.subscribe(@server, "events")
-    lights = %{:living => [ui_name: "licht bureau", ui_group: "leefruimte", ui_order: 1, r: 0, g: 0, b: 0, w: 190, dw: 120],
-                :kitchen => [ui_name: "keukeneiland", ui_group: "leefruimte", ui_order: 2, r: 0, g: 0, b: 0, w: 220, dw: 200],
-                :bathroom => [ui_name: "bathroom light", ui_group: "badkamer", ui_order: 3, r: 0, g: 0, b: 0, w: 90, dw: 240]
+    lights = %{:living => %Light{ui_name: "licht bureau", ui_group: "leefruimte", ui_order: 1, r: 0, g: 0, b: 0, w: 190, default_w: 120, dmx_channel: 0},
+                :kitchen => %Light{ui_name: "keukeneiland", ui_group: "leefruimte", ui_order: 2, r: 0, g: 0, b: 0, w: 220, default_w: 200, dmx_channel: 1},
+                :bathroom => %Light{ui_name: "bathroom light", ui_group: "badkamer", ui_order: 3, r: 0, g: 0, b: 0, w: 90, default_w: 240, dmx_channel: 2}
   }
     {:ok, lights}
+  end
+
+
+  def handle_info({:state, lights}, state) do
+    IO.inspect(state)
+    IO.puts("Received a lights state update")
+    #state = assign(state, lights: lights)
+    {:noreply, lights}
   end
 
   def handle_info(:get_state, state) do
     IO.puts("Get state request")
     Phoenix.PubSub.broadcast(@server, "events", {:state, state})
+    {:noreply, state}
+  end
+
+  def handle_info(:get_lights_config, state) do
+    IO.puts("Get light config request")
+    # TODO: read configuration file from disk
+    Phoenix.PubSub.broadcast(@server, "events", {:config, state})
+    {:noreply, state}
+  end
+
+
+  def handle_info({:new_lights_config, lights}, state) do
+    IO.puts("new config pushed")
+    # TODO: save the config
+    Phoenix.PubSub.broadcast(@server, "events", {:state, lights})
     {:noreply, state}
   end
 
@@ -42,7 +77,7 @@ defmodule Ui do
 
     {_ ,state} = Map.get_and_update(state, id, fn current ->
       IO.inspect(current)
-      updatedkw = Keyword.put(current, :w, 0)
+      updatedkw = Map.put(current, :w, 0)
       {current, updatedkw}
     end)
     Phoenix.PubSub.broadcast(@server, @channel, {:state, state})
@@ -56,8 +91,8 @@ defmodule Ui do
 
     {_ ,state} = Map.get_and_update(state, id, fn current ->
       IO.inspect(current)
-      {:ok, default} = Keyword.fetch(current, :dw)
-      updatedkw = Keyword.put(current, :w, default)
+      default = Map.get(current, :default_w)
+      updatedkw = Map.put(current, :w, default)
       {current, updatedkw}
     end)
     Phoenix.PubSub.broadcast(@server, @channel, {:state, state})
@@ -65,9 +100,52 @@ defmodule Ui do
     {:noreply, state}
   end
 
+  def handle_info({:down, id, step}, state) do
+    IO.puts("handling down for #{id}")
+    id = String.to_atom(id)
+
+    {_ ,state} = Map.get_and_update(state, id, fn current ->
+      brightness = Map.get(current, :w)
+      brightness = max(@min_val, brightness - step)
+      updatedkw = Map.put(current, :w, brightness)
+      {current, updatedkw}
+    end)
+    Phoenix.PubSub.broadcast(@server, @channel, {:state, state})
+
+    {:noreply, state}
+  end
+
+
+  def handle_info({:up, id, step}, state) do
+    IO.puts("handling up for #{id}")
+    id = String.to_atom(id)
+
+    {_ ,state} = Map.get_and_update(state, id, fn current ->
+      brightness = Map.get(current, :w)
+      brightness = min(@max_val, brightness + step)
+      updatedkw = Map.put(current, :w, brightness)
+      {current, updatedkw}
+    end)
+    Phoenix.PubSub.broadcast(@server, @channel, {:state, state})
+
+    {:noreply, state}
+  end
+
+  def handle_info({:value, id, new_value}, state) do
+    IO.puts("handling value for #{id}")
+    id = String.to_atom(id)
+    new_value = String.to_integer(new_value)
+
+    {_ ,state} = Map.get_and_update(state, id, fn current ->
+      {current, Map.put(current, :w, new_value)}
+    end)
+    Phoenix.PubSub.broadcast(@server, @channel, {:state, state})
+    {:noreply, state}
+  end
+
+
   def handle_info({:button, _}, state) do
     IO.puts "Button pressed!"
-    IO.inspect(state)
     Phoenix.PubSub.broadcast(@server, "events", state)
     {:noreply, state}
   end

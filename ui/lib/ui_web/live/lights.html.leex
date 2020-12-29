@@ -14,22 +14,24 @@
     <button phx-click="down">
     <img src="images/down.svg">
     </button> %>
-    <p class="font-bold text-grey-800 flex justify-center p-5"><%= list[:ui_name] %></p>
+    <p class="font-bold text-grey-800 flex justify-center p-5"><%= list.ui_name %></p>
     <div class="flex justify-center w-auto">
 
       <button class="bg-gray-500 text-white font-bold py-2 px-4 rounded mr-4" phx-click="off-<%= key %>">
         Off
       </button>
 
-      <button class="mr-4">
+      <button class="mr-4" phx-click="down-<%= key %>">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 flex-no-shrink fill-current" fill="none"  viewBox="0 0 20 20" fill="currentColor">
           <path fillRule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
         </svg>
       </button>
 
-      <input type="range" min=0 max=255 step=5 value="<%= list[:w] %>" class="appearance-none bg-gray-400 rounded outline-none">
+      <form phx-change="change-<%= key %>" key >
+        <input name="slider" type="range" min=0 max=255 step=8 value="<%= list.w %>" class="appearance-none bg-gray-400 rounded outline-none">
+      </form>
 
-      <button class="ml-4">
+      <button class="ml-4" phx-click="up-<%= key %>">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 flex-no-shrink fill-current" fill="none"  viewBox="0 0 20 20" fill="currentColor">
           <path fillRule="evenodd" d="M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clipRule="evenodd" />
           <path fillRule="evenodd" d="M4.293 15.707a1 1 0 010-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clipRule="evenodd" />

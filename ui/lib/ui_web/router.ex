@@ -19,6 +19,7 @@ defmodule UiWeb.Router do
 
     live "/", PageLive, :index
     live "/lights", Lights
+    live "/editor", LightEditor
   end
 
   # Other scopes may use custom stacks.

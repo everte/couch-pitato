@@ -1,9 +1,9 @@
 defmodule UiWeb.Lights do
   use UiWeb, :live_view
 
-
   @server  Ui.PubSub
   @channel "events"
+  @step 8
 
   @impl true
   def mount(_params, _session, socket) do
@@ -31,10 +31,29 @@ defmodule UiWeb.Lights do
     {:noreply, socket}
   end
 
-
   def handle_event("on-" <> id, _, socket) do
     IO.puts("on for id #{id}")
     Phoenix.PubSub.broadcast(@server, @channel, {:on, id})
+    {:noreply, socket}
+  end
+
+  def handle_event("down-" <> id, _, socket) do
+    IO.puts("down for id #{id}")
+    Phoenix.PubSub.broadcast(@server, @channel, {:down, id, @step})
+    {:noreply, socket}
+  end
+
+
+  def handle_event("up-" <> id, _, socket) do
+    IO.puts("up for id #{id}")
+    Phoenix.PubSub.broadcast(@server, @channel, {:up, id, @step})
+    {:noreply, socket}
+  end
+
+
+  def handle_event("change-" <> id, %{"slider" => slider_val}, socket) do
+    IO.puts("change for #{id} and slider value: #{slider_val}")
+    Phoenix.PubSub.broadcast(@server, @channel, {:value, id, slider_val})
     {:noreply, socket}
   end
 
