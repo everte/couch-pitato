@@ -6,7 +6,6 @@ defmodule Ui do
   Contexts are also responsible for managing your data, regardless
   if it comes from the database, an external API or others.
   """
-
   use GenServer
 
   @server Ui.PubSub
@@ -19,7 +18,7 @@ defmodule Ui do
   end
 
 
-  # Todo:
+  # TODO:
   # Configuration write and read from file:
   # File.write!("test.txt", :erlang.term_to_binary(map))
   #  File.read!("test.txt") |> :erlang.binary_to_term
