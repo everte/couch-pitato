@@ -10,7 +10,7 @@ defmodule Ui.Application do
       # Start the Telemetry supervisor
       UiWeb.Telemetry,
       # Start the PubSub system
-      {Phoenix.PubSub, name: Ui.PubSub},
+      {Phoenix.PubSub, [name: Ui.PubSub, adapter: Phoenix.PubSub.PG2]},
 
       # Start the Endpoint (http/https)
       UiWeb.Endpoint,

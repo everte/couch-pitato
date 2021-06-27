@@ -30,6 +30,7 @@ defmodule SerialPortDmxSender do
     #:timer.send_interval(50, self(), {:send_dmx})
     :global.register_name("serial_dmx", self())
     GenServer.cast(@module, {:send_dmx})
+    Phoenix.PubSub.subscribe(Ui.PubSub, "dmx")
     {:ok, %{dmx_data: <<100>>, uart_pid: uart_pid}}
   end
 
@@ -62,6 +63,17 @@ defmodule SerialPortDmxSender do
   def handle_info({:circuits_uart, _serial_port, _msg}, state), do: {:noreply, state}
   def terminate(reason,  %{uart_pid: uart_pid} = state) do
     Circuits.UART.stop(uart_pid)
+    {:noreply, state}
+  end
+
+  def handle_info({:dmx, dmx}, state) do
+    IO.puts("received dmx")
+    IO.inspect(dmx)
+    send_dmx(dmx)
+    {:noreply, state}
+  end
+
+  def handle_info(_, state) do
     {:noreply, state}
   end
 end
