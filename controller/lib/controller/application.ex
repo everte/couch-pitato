@@ -9,6 +9,7 @@ defmodule Controller.Application do
     children = [
       # Starts a worker by calling: Controller.Worker.start_link(arg)
       # {Controller.Worker, arg}
+      {Phoenix.PubSub, name: Ui.PubSub},
       {Phoenix.PubSub, name: Controller.PubSub},
       {Controller, name: :subscription}
     ]

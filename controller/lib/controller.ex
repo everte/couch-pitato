@@ -1,7 +1,8 @@
 defmodule Controller do
   use GenServer
 
-  @server  Controller.PubSub
+  #@server  Controller.PubSub
+  @server  Ui.PubSub
   @channel "events"
 
   def start_link(opts) do

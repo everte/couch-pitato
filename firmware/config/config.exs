@@ -8,6 +8,8 @@ import Config
 # Enable the Nerves integration with Mix
 Application.start(:nerves_bootstrap)
 
+import_config "../../ui/config/config.exs"
+#import_config "../../ui/config/prod.exs"
 config :firmware, target: Mix.target()
 
 # Customize non-Elixir parts of the firmware. See
