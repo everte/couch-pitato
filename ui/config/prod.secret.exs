@@ -4,12 +4,12 @@
 # remember to add this file to your .gitignore.
 use Mix.Config
 
-secret_key_base =
-  System.get_env("SECRET_KEY_BASE") ||
-    raise """
-    environment variable SECRET_KEY_BASE is missing.
-    You can generate one by calling: mix phx.gen.secret
-    """
+secret_key_base = "7jD/bBleP1q2m6rJODEi9oAitGwleX0aRY94z9OOqps3Wx030drdv91xHhg8Ebu1"
+#  System.get_env("SECRET_KEY_BASE") ||
+#    raise """
+#    environment variable SECRET_KEY_BASE is missing.
+#    You can generate one by calling: mix phx.gen.secret
+#    """
 
 config :ui, UiWeb.Endpoint,
   http: [

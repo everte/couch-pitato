@@ -1,4 +1,5 @@
 defmodule SerialPortDmxSender do
+  require Logger
   use GenServer
 
   @module __MODULE__
@@ -67,8 +68,8 @@ defmodule SerialPortDmxSender do
   end
 
   def handle_info({:dmx, dmx}, state) do
-    IO.puts("received dmx")
-    IO.inspect(dmx)
+    Logger.debug("received dmx - going to cast to serial port!")
+    Logger.debug("dmx: #{inspect dmx}")
     send_dmx(dmx)
     {:noreply, state}
   end

@@ -7,17 +7,20 @@
 
     <%# :bathroom => [ui_name: "bathroom light", ui_group: "badkamer",
     ui_order: 3, r: 0, g: 0, b: 0, w: 90, default_w: 240, dmx_channel: 2] %>
-    <label>key name</label>
-    <input name="name" value="<%= key %>" phx-debounce="blur">
+    <label class="inline-block">key name</label>
+    <input class="md:w-auto" name="name" value="<%= key %>" phx-debounce="blur">
 
-    <label>UI name</label>
-    <input name="ui_name" value="<%= list.ui_name %>" phx-debounce="blur">
+    <label class="inline-block">UI name</label>
+    <input class="md:w-auto" name="ui_name" value="<%= list.ui_name %>" phx-debounce="blur">
 
-    <label>Default value white</label>
-    <input name="default_w" type="text" inputmode="numeric" pattern="[0-9]*" value="<%= list.default_w %>" phx-debounce="blur">
+    <label class="inline-block">Default value white</label>
+    <input class="md:w-auto" name="default_w" inputmode="numeric" pattern="[0-9]*" value="<%= list.default_w %>" phx-debounce="blur">
 
-    <label>DMX channel</label>
-    <input name="dmx_channel" value="<%= list.dmx_channel %>" phx-debounce="blur">
+    <label class="inline-block">DMX channel w</label>
+    <input class="md:w-auto" name="dmx_channel_w" value="<%= list.dmx_channel_w %>" phx-debounce="blur">
+    
+    <label class="inline-block">RGB</label>
+    <input class="md:w-auto" name="rgb" value="<%= list.rgb %>" phx-debounce="blur">
 </form>
 
 <% end %>

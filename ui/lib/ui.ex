@@ -1,4 +1,5 @@
 defmodule Ui do
+  require Logger
   @moduledoc """
   Ui keeps the contexts that define your domain
   and business logic.
@@ -36,14 +37,16 @@ defmodule Ui do
     lights = %{:living => %Light{ui_name: "licht bureau", ui_group: "leefruimte", ui_order: 1, r: 0, g: 0, b: 0, w: 190, default_w: 120, dmx_channel_w: 0, dmx_channel_r: 1, dmx_channel_g: 2, dmx_channel_b: 3, rgb: false},
                 :kitchen => %Light{ui_name: "keukeneiland", ui_group: "leefruimte", ui_order: 2, r: 0, g: 0, b: 0, w: 220, default_w: 200, dmx_channel_w: 1, rgb: false},
                 :bathroom => %Light{ui_name: "bathroom light", ui_group: "badkamer", ui_order: 3, r: 0, g: 0, b: 0, w: 90, default_w: 240, dmx_channel_w: 9, rgb: false}}
+
     {:ok, lights}
   end
 
 
   def handle_info({:state, lights}, state) do
-    IO.inspect(state)
-    IO.puts("Received a lights state update")
+    Logger.debug(state)
+    Logger.debug("Received a lights state update")
     dmx_bitstring = Dmx.create_dmx_bitstring(lights)
+    Logger.debug("dmx bitstring is: #{inspect dmx_bitstring}")
     Phoenix.PubSub.broadcast(@server, "dmx", {:dmx, dmx_bitstring})
     IO.inspect(dmx_bitstring)
     

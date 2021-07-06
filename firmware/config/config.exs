@@ -1,4 +1,5 @@
 # This file is responsible for configuring your application
+# use Mix.config
 # and its dependencies with the aid of the Mix.Config module.
 #
 # This configuration file is loaded before any dependency and
@@ -31,3 +32,19 @@ config :logger, backends: [RingLogger]
 if Mix.target() != :host do
   import_config "target.exs"
 end
+
+# https://hexdocs.pm/nerves/user-interfaces.html
+
+# When we deploy to a device, we use the "prod" configuration:
+#import_config "../../ui/config/config.exs"
+import_config "../../ui/config/prod.exs"
+
+config :ui, UiWeb.Endpoint,
+  # Nerves root filesystem is read-only, so disable the code reloader
+  code_reloader: false,
+  http: [port: 80],
+  # Use compile-time Mix config instead of runtime environment variables
+  load_from_system_env: false,
+  # Start the server since we're running in a release instead of through `mix`
+  server: true,
+  url: [host: "nerves.local", port: 80]

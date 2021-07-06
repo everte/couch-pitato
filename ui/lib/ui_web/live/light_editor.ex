@@ -14,7 +14,7 @@ defmodule UiWeb.LightEditor do
 
   @impl true
   def handle_info({:config, lights}, state) do
-    IO.puts("Received a lights state update")
+    IO.puts("Received a lights config map")
     state = assign(state, lights: lights)
     {:noreply, state}
   end
@@ -43,8 +43,9 @@ defmodule UiWeb.LightEditor do
 
         new_value =
           case changed_key do
-            :dmx_channel -> String.to_integer(new_value)
+            :dmx_channel_w -> String.to_integer(new_value)
             :default_w -> String.to_integer(new_value)
+            :rgb -> String.to_atom(new_value)
             _ -> new_value
           end
         updatedkw = Map.put(current, changed_key, new_value)
@@ -69,8 +70,12 @@ defmodule UiWeb.LightEditor do
   def handle_event("form-save", _, socket) do
     IO.puts("trying to save light config")
     lights = socket.assigns.lights
-    Phoenix.PubSub.broadcast(@server, @channel, {:new_lights_config, lights})
-    {:noreply, socket}
+    case verify_lights(lights) do
+      true ->
+        Phoenix.PubSub.broadcast(@server, @channel, {:new_lights_config, lights})
+        {:noreply, socket}
+      false -> {:noreply, put_flash(socket, :error, "lights not correct")}
+    end
   end
 
   def handle_event(event, _, socket) do
@@ -85,4 +90,10 @@ defmodule UiWeb.LightEditor do
     |> Map.put(new_key, orig_map[old_key])
   end
 
+  def verify_lights(lights) do
+    IO.inspect(lights)
+
+    
+    false
+  end
 end
