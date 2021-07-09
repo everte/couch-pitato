@@ -34,7 +34,7 @@ defmodule Ui do
     Phoenix.PubSub.subscribe(@server, "events")
     Phoenix.PubSub.subscribe(@server, "dmx")
 
-    lights = %{:living => %Light{ui_name: "licht bureau", ui_group: "leefruimte", ui_order: 1, r: 0, g: 0, b: 0, w: 190, default_w: 120, dmx_channel_w: 0, dmx_channel_r: 1, dmx_channel_g: 2, dmx_channel_b: 3, rgb: false},
+    lights = %{:living => %Light{ui_name: "licht bureau", ui_group: "leefruimte", ui_order: 1, r: 0, g: 0, b: 0, w: 190, default_w: 120, default_r: 10, default_g: 20, default_b: 50, dmx_channel_w: 0, dmx_channel_r: 1, dmx_channel_g: 2, dmx_channel_b: 3, rgb: true},
                 :kitchen => %Light{ui_name: "keukeneiland", ui_group: "leefruimte", ui_order: 2, r: 0, g: 0, b: 0, w: 220, default_w: 200, dmx_channel_w: 1, rgb: false},
                 :bathroom => %Light{ui_name: "bathroom light", ui_group: "badkamer", ui_order: 3, r: 0, g: 0, b: 0, w: 90, default_w: 240, dmx_channel_w: 9, rgb: false}}
 
@@ -75,16 +75,16 @@ defmodule Ui do
     {:noreply, state}
   end
 
-  def handle_info({:off, id}, state) do
-    IO.puts("handling off for #{id}")
-    id = String.to_atom(id)
+  def handle_info({:off, {id, colour}}, state) do
+    IO.puts("handling off for #{id} in #{colour}")
+    id = String.to_existing_atom(id)
+    colour = String.to_existing_atom(colour)
     IO.inspect(state)
     IO.inspect(id)
     IO.inspect(Map.get(state, id))
 
     {_ ,state} = Map.get_and_update(state, id, fn current ->
-      IO.inspect(current)
-      updatedkw = Map.put(current, :w, 0)
+      updatedkw = Map.put(current, colour, 0)
       {current, updatedkw}
     end)
     Phoenix.PubSub.broadcast(@server, @channel, {:state, state})
@@ -92,14 +92,14 @@ defmodule Ui do
     {:noreply, state}
   end
 
-  def handle_info({:on, id}, state) do
-    IO.puts("handling on for #{id}")
-    id = String.to_atom(id)
+  def handle_info({:on, {id, colour}}, state) do
+    IO.puts("handling on for #{id} in #{colour}")
+    id = String.to_existing_atom(id)
+    colour = String.to_existing_atom(colour)
 
     {_ ,state} = Map.get_and_update(state, id, fn current ->
-      IO.inspect(current)
       default = Map.get(current, :default_w)
-      updatedkw = Map.put(current, :w, default)
+      updatedkw = Map.put(current, colour, default)
       {current, updatedkw}
     end)
     Phoenix.PubSub.broadcast(@server, @channel, {:state, state})
@@ -107,14 +107,15 @@ defmodule Ui do
     {:noreply, state}
   end
 
-  def handle_info({:down, id, step}, state) do
-    IO.puts("handling down for #{id}")
-    id = String.to_atom(id)
+  def handle_info({:down, {id, colour}, step}, state) do
+    IO.puts("handling down for #{id} #{colour}")
+    id = String.to_existing_atom(id)
+    colour = String.to_existing_atom(colour)
 
     {_ ,state} = Map.get_and_update(state, id, fn current ->
-      brightness = Map.get(current, :w)
+      brightness = Map.get(current, colour)
       brightness = max(@min_val, brightness - step)
-      updatedkw = Map.put(current, :w, brightness)
+      updatedkw = Map.put(current, colour, brightness)
       {current, updatedkw}
     end)
     Phoenix.PubSub.broadcast(@server, @channel, {:state, state})
@@ -123,14 +124,15 @@ defmodule Ui do
   end
 
 
-  def handle_info({:up, id, step}, state) do
-    IO.puts("handling up for #{id}")
-    id = String.to_atom(id)
+  def handle_info({:up, {id, colour}, step}, state) do
+    IO.puts("handling up for #{id} #{colour}")
+    id = String.to_existing_atom(id)
+    colour = String.to_existing_atom(colour)
 
     {_ ,state} = Map.get_and_update(state, id, fn current ->
-      brightness = Map.get(current, :w)
+      brightness = Map.get(current, colour)
       brightness = min(@max_val, brightness + step)
-      updatedkw = Map.put(current, :w, brightness)
+      updatedkw = Map.put(current, colour, brightness)
       {current, updatedkw}
     end)
     Phoenix.PubSub.broadcast(@server, @channel, {:state, state})
@@ -138,13 +140,14 @@ defmodule Ui do
     {:noreply, state}
   end
 
-  def handle_info({:value, id, new_value}, state) do
-    IO.puts("handling value for #{id}")
-    id = String.to_atom(id)
+  def handle_info({:value, {id, colour}, new_value}, state) do
+    IO.puts("handling value for #{id} #{colour}")
+    id = String.to_existing_atom(id)
+    colour = String.to_existing_atom(colour)
     new_value = String.to_integer(new_value)
 
     {_ ,state} = Map.get_and_update(state, id, fn current ->
-      {current, Map.put(current, :w, new_value)}
+      {current, Map.put(current, colour, new_value)}
     end)
     Phoenix.PubSub.broadcast(@server, @channel, {:state, state})
     {:noreply, state}

@@ -25,41 +25,42 @@ defmodule UiWeb.Lights do
   end
 
   @impl true
-  def handle_event("off-" <> id, _, socket) do
-    IO.puts("off for id #{id}")
-    Phoenix.PubSub.broadcast(@server, @channel, {:off, id})
+  def handle_event("off", %{"key" => key, "colour" => colour}, socket) do
+    IO.puts("off for key #{key} and colour #{colour}")
+    Phoenix.PubSub.broadcast(@server, @channel, {:off, {key, colour}})
     {:noreply, socket}
   end
 
-  def handle_event("on-" <> id, _, socket) do
-    IO.puts("on for id #{id}")
-    Phoenix.PubSub.broadcast(@server, @channel, {:on, id})
+  def handle_event("on", %{"key" => key, "colour" => colour}, socket) do
+    IO.puts("on for key #{key} and colour #{colour}")
+    Phoenix.PubSub.broadcast(@server, @channel, {:on, {key, colour}})
     {:noreply, socket}
   end
 
-  def handle_event("down-" <> id, _, socket) do
-    IO.puts("down for id #{id}")
-    Phoenix.PubSub.broadcast(@server, @channel, {:down, id, @step})
-    {:noreply, socket}
-  end
-
-
-  def handle_event("up-" <> id, _, socket) do
-    IO.puts("up for id #{id}")
-    Phoenix.PubSub.broadcast(@server, @channel, {:up, id, @step})
+  def handle_event("down", %{"key" => key, "colour" => colour}, socket) do
+    IO.puts("down for id #{key} with colour: #{colour}")
+    Phoenix.PubSub.broadcast(@server, @channel, {:down, {key, colour}, @step})
     {:noreply, socket}
   end
 
 
-  def handle_event("change-" <> id, %{"slider" => slider_val}, socket) do
-    IO.puts("change for #{id} and slider value: #{slider_val}")
-    Phoenix.PubSub.broadcast(@server, @channel, {:value, id, slider_val})
+  def handle_event("up", %{"key" => key, "colour" => colour}, socket) do
+    IO.puts("up for id #{key} with colour: #{colour}")
+    Phoenix.PubSub.broadcast(@server, @channel, {:up, {key, colour}, @step})
     {:noreply, socket}
   end
 
-  def handle_event(event, _, socket) do
+
+  def handle_event("change", %{"slider" => slider_val, "key" => key, "colour" => colour}, socket) do
+    IO.puts("change for #{key}, colour #{colour} and slider value: #{slider_val}")
+    Phoenix.PubSub.broadcast(@server, @channel, {:value, {key, colour}, slider_val})
+    {:noreply, socket}
+  end
+
+  def handle_event(event, data, socket) do
     IO.puts("catch all event")
     IO.inspect(event)
+    IO.inspect(data)
     {:noreply, socket}
   end
 end
