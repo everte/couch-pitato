@@ -34,9 +34,11 @@ defmodule Ui do
     Phoenix.PubSub.subscribe(@server, "events")
     Phoenix.PubSub.subscribe(@server, "dmx")
 
-    lights = %{:living => %Light{ui_name: "licht bureau", ui_group: "leefruimte", ui_order: 1, r: 0, g: 0, b: 0, w: 190, default_w: 120, default_r: 10, default_g: 20, default_b: 50, dmx_channel_w: 0, dmx_channel_r: 1, dmx_channel_g: 2, dmx_channel_b: 3, rgb: true},
+    lights = %{:living => %Light{ui_name: "licht bureau", ui_group: "leefruimte", ui_order: 1, r: 0, g: 0, b: 0, w: 190, default_w: 120, default_r: 10, default_g: 20, default_b: 50, dmx_channel_w: 0, dmx_channel_r:  5, dmx_channel_g: 3, dmx_channel_b: 4, rgb: true, rgbval: "FF0000"},
                 :kitchen => %Light{ui_name: "keukeneiland", ui_group: "leefruimte", ui_order: 2, r: 0, g: 0, b: 0, w: 220, default_w: 200, dmx_channel_w: 1, rgb: false},
                 :bathroom => %Light{ui_name: "bathroom light", ui_group: "badkamer", ui_order: 3, r: 0, g: 0, b: 0, w: 90, default_w: 240, dmx_channel_w: 9, rgb: false}}
+
+    Phoenix.PubSub.broadcast(@server, "events", :get_state)
 
     {:ok, lights}
   end
