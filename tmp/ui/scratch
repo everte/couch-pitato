@@ -1,0 +1,3 @@
+{:ok, gpio} = Circuits.GPIO.open(14, :input) 
+Circuits.GPIO.set_pull_mode(gpio, :pulldown)
+Circuits.GPIO.set_interrupts(gpio, :both)   

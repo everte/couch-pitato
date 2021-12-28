@@ -1,0 +1,40 @@
+<h1 class="text-red-500 text-5xl font-bold text-center">Light editor</h1>
+
+
+
+<%= for {key, list} <- @lights do %>
+<form phx-change="form-change-<%= key %>">
+
+    <%# :bathroom => [ui_name: "bathroom light", ui_group: "badkamer",
+    ui_order: 3, r: 0, g: 0, b: 0, w: 90, default_w: 240, dmx_channel: 2] %>
+    <label class="inline-block">key name</label>
+    <input class="md:w-auto" name="name" value="<%= key %>" phx-debounce="blur">
+
+    <label class="inline-block">UI name</label>
+    <input class="md:w-auto" name="ui_name" value="<%= list.ui_name %>" phx-debounce="blur">
+
+    <label class="inline-block">Default value white</label>
+    <input class="md:w-auto" name="default_w" inputmode="numeric" pattern="[0-9]*" value="<%= list.default_w %>" phx-debounce="blur">
+
+    <label class="inline-block">DMX channel w</label>
+    <input class="md:w-auto" name="dmx_channel_w" value="<%= list.dmx_channel_w %>" phx-debounce="blur">
+    
+    <label class="inline-block">RGB</label>
+    <input class="md:w-auto" name="rgb" value="<%= list.rgb %>" phx-debounce="blur">
+</form>
+
+<% end %>
+
+
+    <button name="add-row" class="ml-4" phx-click="add-row">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 flex-no-shrink fill-current" fill="none"  viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+        </svg>
+    </button>
+
+    <button name="form-save" class="ml-4" phx-click="form-save">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 flex-no-shrink fill-current" fill="none"  viewBox="0 0 20 20" fill="currentColor">
+            <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z" />
+            <path d="M9 13h2v5a1 1 0 11-2 0v-5z" />
+        </svg>
+    </button>

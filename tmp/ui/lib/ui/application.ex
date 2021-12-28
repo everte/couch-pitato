@@ -12,7 +12,6 @@ defmodule Ui.Application do
       UiWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, [name: Ui.PubSub, adapter: Phoenix.PubSub.PG2]},
-
       # Start the Endpoint (http/https)
       UiWeb.Endpoint,
       Ui
@@ -28,6 +27,7 @@ defmodule Ui.Application do
 
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
+  @impl true
   def config_change(changed, _new, removed) do
     UiWeb.Endpoint.config_change(changed, removed)
     :ok

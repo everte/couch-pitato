@@ -12,6 +12,7 @@ defmodule Firmware.Application do
 
     children =
       [
+        {Firmware.Buttons, []}
         # Children for all targets
         # Starts a worker by calling: Firmware.Worker.start_link(arg)
         # {Firmware.Worker, arg},

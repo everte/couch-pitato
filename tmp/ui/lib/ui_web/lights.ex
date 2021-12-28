@@ -55,6 +55,19 @@ defmodule UiWeb.Lights do
     {:noreply, socket}
   end
 
+  def handle_event("change", %{"colour" => "#" <> colour, "key" => key}, socket) do
+    IO.puts("handle colour change")
+    IO.inspect(colour)
+    IO.inspect(key)
+    <<r::binary-size(2), g::binary-size(2), b::binary-size(2)>> = colour
+    {r, _} = Integer.parse(r, 16)
+    {g, _} = Integer.parse(g, 16)
+    {b, _} = Integer.parse(b, 16)
+    IO.inspect(r)
+    Phoenix.PubSub.broadcast(@server, @channel, {:colours, {key, {r, g, b}}})
+    {:noreply, socket}
+  end
+
   def handle_event(event, data, socket) do
     IO.puts("catch all event")
     IO.inspect(event)

@@ -2,6 +2,7 @@ defmodule Light do
   defstruct ui_name: "no_name",
             ui_group: "no_group",
             ui_order: nil,
+            white: true,
             rgb: nil,
             r: 0,
             g: 0,
