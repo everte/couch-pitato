@@ -30,9 +30,11 @@ defmodule Firmware.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ui, path: "../ui"},
-      {:dmxserial, path: "../dmxserial"},
+      {:ui, path: "../tmp/ui"},
+      # {:dmxserial, path: "../dmxserial"},
       # Dependencies for all targets
+      {:phoenix_pubsub, "~> 2.0"},
+
       {:nerves, "~> 1.7.0", runtime: false},
       {:shoehorn, "~> 0.8.0"},
       {:ring_logger, "~> 0.8.1"},

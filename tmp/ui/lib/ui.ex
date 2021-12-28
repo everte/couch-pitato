@@ -153,6 +153,19 @@ defmodule Ui do
     {:noreply, state}
   end
 
+  def handle_info({:onoff, {id}}, state) do
+    Logger.debug("handling onoff for #{id}")
+    id_atom = String.to_existing_atom(id)
+
+    light = state[id_atom]
+    cond do
+      Map.get(light, :w) == 0 -> Phoenix.PubSub.broadcast(@server, @channel, {:on, {id, "w"}})
+      Map.get(light, :w) != 0 -> Phoenix.PubSub.broadcast(@server, @channel, {:off, {id, "w"}})
+    end
+
+    {:noreply, state}
+  end
+
   def handle_info({:down, {id, colour}, step}, state) do
     IO.puts("handling down for #{id} #{colour}")
     id = String.to_existing_atom(id)
@@ -224,13 +237,16 @@ defmodule Ui do
     {:noreply, state}
   end
 
-  def handle_info({:button, _}, state) do
-    IO.puts("Button pressed!")
+  def handle_info({:button, pin_number}, state) do
+    Logger.info("Button pin #{pin_number} pressed - received broadcast!")
+    Light.Action.apply_action(pin_number, state)
     Phoenix.PubSub.broadcast(@server, "events", state)
     {:noreply, state}
   end
 
-  def handle_info(_msg, state) do
+  def handle_info(msg, state) do
+    Logger.debug("catch all")
+    IO.inspect(msg)
     {:noreply, state}
   end
 end

@@ -10,7 +10,8 @@ defmodule Dmxserial.Application do
     children = [
       # Starts a worker by calling: Dmxserial.Worker.start_link(arg)
       # {Dmxserial.Worker, arg}
-      {Phoenix.PubSub, [name: Ui.PubSub, adapter: Phoenix.PubSub.PG2]}
+
+      # {Phoenix.PubSub, [name: Ui.PubSub, adapter: Phoenix.PubSub.PG2]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
