@@ -1,0 +1,32 @@
+<h1>Show Button</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal UiWeb.ButtonLive.FormComponent,
+    id: @button.id,
+    title: @page_title,
+    action: @live_action,
+    button: @button,
+    return_to: Routes.button_show_path(@socket, :show, @button) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Gpio pin:</strong>
+    <%= @button.gpio_pin %>
+  </li>
+
+  <li>
+    <strong>Action:</strong>
+    <%= @button.action %>
+  </li>
+
+  <li>
+    <strong>Target:</strong>
+    <%= @button.target %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.button_show_path(@socket, :edit, @button), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.button_index_path(@socket, :index) %></span>

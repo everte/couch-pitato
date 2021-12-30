@@ -153,6 +153,19 @@ defmodule Ui do
     {:noreply, state}
   end
 
+  def handle_info({:onoff, {id}}, state) do
+    Logger.debug("handling onoff for #{id}")
+    id_atom = String.to_existing_atom(id)
+
+    light = state[id_atom]
+    cond do
+      Map.get(light, :w) == 0 -> Phoenix.PubSub.broadcast(@server, @channel, {:on, {id, "w"}})
+      Map.get(light, :w) != 0 -> Phoenix.PubSub.broadcast(@server, @channel, {:off, {id, "w"}})
+    end
+
+    {:noreply, state}
+  end
+
   def handle_info({:down, {id, colour}, step}, state) do
     IO.puts("handling down for #{id} #{colour}")
     id = String.to_existing_atom(id)
@@ -204,13 +217,36 @@ defmodule Ui do
     {:noreply, state}
   end
 
-  def handle_info({:button, _}, state) do
-    IO.puts("Button pressed!")
+  def handle_info({:colours, {id, {r, g, b}}}, state) do
+    IO.puts("Handling colour change for #{id} with #{r}, #{g}, #{b}")
+    id = String.to_existing_atom(id)
+
+    rgbval =
+      "#" <> Integer.to_string(r, 16) <> Integer.to_string(g, 16) <> Integer.to_string(b, 16)
+
+    {_, state} =
+      Map.get_and_update(state, id, fn current ->
+        updated = Map.put(current, :r, r)
+        updated = Map.put(updated, :g, g)
+        updated = Map.put(updated, :b, b)
+        updated = Map.put(updated, :rgbval, rgbval)
+        {current, updated}
+      end)
+
+    Phoenix.PubSub.broadcast(@server, @channel, {:state, state})
+    {:noreply, state}
+  end
+
+  def handle_info({:button, pin_number}, state) do
+    Logger.info("Button pin #{pin_number} pressed - received broadcast!")
+    Light.Action.apply_action(pin_number, state)
     Phoenix.PubSub.broadcast(@server, "events", state)
     {:noreply, state}
   end
 
-  def handle_info(_msg, state) do
+  def handle_info(msg, state) do
+    Logger.debug("catch all")
+    IO.inspect(msg)
     {:noreply, state}
   end
 end

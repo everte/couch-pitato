@@ -1,0 +1,39 @@
+<h1>Listing Buttons</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal UiWeb.ButtonLive.FormComponent,
+    id: @button.id || :new,
+    title: @page_title,
+    action: @live_action,
+    button: @button,
+    return_to: Routes.button_index_path(@socket, :index) %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Gpio pin</th>
+      <th>Action</th>
+      <th>Target</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="buttons">
+    <%= for button <- @buttons do %>
+      <tr id={"button-#{button.id}"}>
+        <td><%= button.gpio_pin %></td>
+        <td><%= button.action %></td>
+        <td><%= button.target %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.button_show_path(@socket, :show, button) %></span>
+          <span><%= live_patch "Edit", to: Routes.button_index_path(@socket, :edit, button) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: button.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Button", to: Routes.button_index_path(@socket, :new) %></span>

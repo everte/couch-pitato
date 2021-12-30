@@ -30,7 +30,7 @@ defmodule Firmware.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ui, path: "../tmp/ui"},
+      {:ui, path: "../ui", targets: @all_targets, env: Mix.env()},
       # {:dmxserial, path: "../dmxserial"},
       # Dependencies for all targets
       {:phoenix_pubsub, "~> 2.0"},
