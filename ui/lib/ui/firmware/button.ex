@@ -3,9 +3,9 @@ defmodule Ui.Firmware.Button do
   import Ecto.Changeset
 
   schema "buttons" do
-    field :action, :string
-    field :gpio_pin, :string
-    field :target, :string
+    field(:action, :string)
+    field(:gpio_pin, :string)
+    field(:target, :string)
 
     timestamps()
   end

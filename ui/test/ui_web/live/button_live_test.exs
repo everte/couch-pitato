@@ -5,7 +5,11 @@ defmodule UiWeb.ButtonLiveTest do
   import Ui.FirmwareFixtures
 
   @create_attrs %{action: "some action", gpio_pin: "some gpio_pin", target: "some target"}
-  @update_attrs %{action: "some updated action", gpio_pin: "some updated gpio_pin", target: "some updated target"}
+  @update_attrs %{
+    action: "some updated action",
+    gpio_pin: "some updated gpio_pin",
+    target: "some updated target"
+  }
   @invalid_attrs %{action: nil, gpio_pin: nil, target: nil}
 
   defp create_button(_) do

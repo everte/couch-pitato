@@ -1,9 +1,9 @@
 import Config
 
-
 config :ui, Ui.Repo,
   database: "/data/db.db",
   journal_mode: :off
+
 # For production, don't forget to configure the url host
 # to something meaningful, Phoenix uses this information
 # when generating URLs.

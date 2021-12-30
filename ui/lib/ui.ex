@@ -158,6 +158,7 @@ defmodule Ui do
     id_atom = String.to_existing_atom(id)
 
     light = state[id_atom]
+
     cond do
       Map.get(light, :w) == 0 -> Phoenix.PubSub.broadcast(@server, @channel, {:on, {id, "w"}})
       Map.get(light, :w) != 0 -> Phoenix.PubSub.broadcast(@server, @channel, {:off, {id, "w"}})

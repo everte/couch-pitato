@@ -19,7 +19,6 @@ defmodule UiWeb.Router do
     pipe_through :browser
     live "/lights", Lights
 
-
     live "/buttons", ButtonLive.Index, :index
     live "/buttons/new", ButtonLive.Index, :new
     live "/buttons/:id/edit", ButtonLive.Index, :edit
@@ -43,12 +42,12 @@ defmodule UiWeb.Router do
   # If your application does not have an admins-only section yet,
   # you can use Plug.BasicAuth to set up some basic authentication
   # as long as you are also using SSL (which you should anyway).
-  #if Mix.env() in [:dev, :test] do
-   # import Phoenix.LiveDashboard.Router
+  # if Mix.env() in [:dev, :test] do
+  # import Phoenix.LiveDashboard.Router
 
-#    scope "/" do
- #     pipe_through :browser
+  #    scope "/" do
+  #     pipe_through :browser
   #    live_dashboard "/dashboard", metrics: UiWeb.Telemetry
-   # end
-  #end
+  # end
+  # end
 end

@@ -10,7 +10,7 @@ import Config
 config :ui,
   ecto_repos: [Ui.Repo]
 
-  # Configures the endpoint
+# Configures the endpoint
 config :ui, UiWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [view: UiWeb.ErrorView, accepts: ~w(html json), layout: false],

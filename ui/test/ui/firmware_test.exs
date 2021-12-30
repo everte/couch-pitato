@@ -35,7 +35,12 @@ defmodule Ui.FirmwareTest do
 
     test "update_button/2 with valid data updates the button" do
       button = button_fixture()
-      update_attrs = %{action: "some updated action", gpio_pin: "some updated gpio_pin", target: "some updated target"}
+
+      update_attrs = %{
+        action: "some updated action",
+        gpio_pin: "some updated gpio_pin",
+        target: "some updated target"
+      }
 
       assert {:ok, %Button{} = button} = Firmware.update_button(button, update_attrs)
       assert button.action == "some updated action"
