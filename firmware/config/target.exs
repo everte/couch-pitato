@@ -98,6 +98,9 @@ config :mdns_lite,
 # Uncomment to use target specific configurations
 
 # import_config "#{Mix.target()}.exs"
+
+# https://hexdocs.pm/nerves/user-interfaces.html
+
 config :ui, UiWeb.Endpoint,
   url: [host: "nerves.local"],
   http: [port: 80],
@@ -110,7 +113,9 @@ config :ui, UiWeb.Endpoint,
   # Start the server since we're running in a release instead of through `mix`
   server: true,
   # Nerves root filesystem is read-only, so disable the code reloader
-  code_reloader: false
+  code_reloader: false,
+  watchers: [],
+  live_reload: []
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
