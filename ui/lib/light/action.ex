@@ -1,25 +1,22 @@
 defmodule Light.Action do
 
+  require Ecto.Query
+  import Ecto.Query
+  alias Ui.Firmware.Button
+  alias Ui.Repo
 
   @server Ui.PubSub
   @channel "events"
 
-  def apply_action(pin_number, state) do
+  def apply_action(pin_number) do
 
-    {action, lights} = find_action(pin_number)
-
-    apply_action(action, lights, state)
+    query = from b in Button, where: b.gpio_pin == ^pin_number
+    Repo.all(query)
+    |> IO.inspect()
+    |> Enum.each(fn button -> execute_action(button.action, button.target) end)
   end
 
-  def find_action(pin_number) do
-    # currently hardcoded
-    {:onoff, ["living"]}
-  end
-
-  def apply_action(:onoff, lights, state) do
-    Enum.reduce(lights, state, fn light, acc ->
-        Phoenix.PubSub.broadcast(@server, @channel, {:onoff, {light}})
-    end)
-    state
+  def execute_action("onoff", target) do
+    Phoenix.PubSub.broadcast(@server, @channel, {:onoff, {target}})
   end
 end

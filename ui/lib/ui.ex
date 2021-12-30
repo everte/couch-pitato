@@ -239,8 +239,7 @@ defmodule Ui do
 
   def handle_info({:button, pin_number}, state) do
     Logger.info("Button pin #{pin_number} pressed - received broadcast!")
-    Light.Action.apply_action(pin_number, state)
-    Phoenix.PubSub.broadcast(@server, "events", state)
+    Light.Action.apply_action(pin_number)
     {:noreply, state}
   end
 
