@@ -34,12 +34,10 @@ defmodule Firmware.MixProject do
       # {:dmxserial, path: "../dmxserial"},
       # Dependencies for all targets
       {:phoenix_pubsub, "~> 2.0"},
-
       {:nerves, "~> 1.7.0", runtime: false},
       {:shoehorn, "~> 0.8.0"},
       {:ring_logger, "~> 0.8.1"},
       {:toolshed, "~> 0.2.13"},
-
       {:circuits_uart, "~> 1.4.0"},
       {:circuits_gpio, "~> 1.0.0"},
       # Dependencies for all targets except :host

@@ -9,8 +9,8 @@ import Config
 # Enable the Nerves integration with Mix
 Application.start(:nerves_bootstrap)
 
-#import_config "../../ui/config/config.exs"
-#import_config "../../ui/config/prod.exs"
+# import_config "../../ui/config/config.exs"
+# import_config "../../ui/config/prod.exs"
 config :firmware, target: Mix.target()
 
 # Customize non-Elixir parts of the firmware. See
@@ -38,15 +38,15 @@ end
 # https://hexdocs.pm/nerves/user-interfaces.html
 
 # When we deploy to a device, we use the "prod" configuration:
-#import_config "../../ui/config/config.exs"
-#import_config "../../ui/config/prod.exs"
+# import_config "../../ui/config/config.exs"
+# import_config "../../ui/config/prod.exs"
 
-#config :ui, UiWeb.Endpoint,
-  # Nerves root filesystem is read-only, so disable the code reloader
- # code_reloader: false,
-  #http: [port: 80],
-  # Use compile-time Mix config instead of runtime environment variables
-  #load_from_system_env: false,
-  # Start the server since we're running in a release instead of through `mix`
-  #server: true,
-  #url: [host: "nerves.local", port: 80]
+# config :ui, UiWeb.Endpoint,
+# Nerves root filesystem is read-only, so disable the code reloader
+# code_reloader: false,
+# http: [port: 80],
+# Use compile-time Mix config instead of runtime environment variables
+# load_from_system_env: false,
+# Start the server since we're running in a release instead of through `mix`
+# server: true,
+# url: [host: "nerves.local", port: 80]
