@@ -1,0 +1,87 @@
+<h1>Show Light</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal UiWeb.LightLive.FormComponent,
+    id: @light.id,
+    title: @page_title,
+    action: @live_action,
+    light: @light,
+    return_to: Routes.light_show_path(@socket, :show, @light) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @light.name %>
+  </li>
+
+  <li>
+    <strong>Ui name:</strong>
+    <%= @light.ui_name %>
+  </li>
+
+  <li>
+    <strong>Ui group name:</strong>
+    <%= @light.ui_group_name %>
+  </li>
+
+  <li>
+    <strong>Ui group order:</strong>
+    <%= @light.ui_group_order %>
+  </li>
+
+  <li>
+    <strong>Ui order:</strong>
+    <%= @light.ui_order %>
+  </li>
+
+  <li>
+    <strong>Default w:</strong>
+    <%= @light.default_w %>
+  </li>
+
+  <li>
+    <strong>Default r:</strong>
+    <%= @light.default_r %>
+  </li>
+
+  <li>
+    <strong>Default g:</strong>
+    <%= @light.default_g %>
+  </li>
+
+  <li>
+    <strong>Default b:</strong>
+    <%= @light.default_b %>
+  </li>
+
+  <li>
+    <strong>Dmx channel w:</strong>
+    <%= @light.dmx_channel_w %>
+  </li>
+
+  <li>
+    <strong>Dmx channel r:</strong>
+    <%= @light.dmx_channel_r %>
+  </li>
+
+  <li>
+    <strong>Dmx channel g:</strong>
+    <%= @light.dmx_channel_g %>
+  </li>
+
+  <li>
+    <strong>Dmx channel b:</strong>
+    <%= @light.dmx_channel_b %>
+  </li>
+
+  <li>
+    <strong>Rgb:</strong>
+    <%= @light.rgb %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.light_show_path(@socket, :edit, @light), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.light_index_path(@socket, :index) %></span>

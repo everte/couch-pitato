@@ -1,5 +1,7 @@
 defmodule Ui do
   require Logger
+  alias Ui.Helpers.Light
+  alias Ui.Helpers.Action
 
   @moduledoc """
   Ui keeps the contexts that define your domain
@@ -19,70 +21,22 @@ defmodule Ui do
     GenServer.start_link(__MODULE__, :ok, opts)
   end
 
-  # TODO:
-  # Configuration write and read from file:
-  # File.write!("test.txt", :erlang.term_to_binary(map))
-  #  File.read!("test.txt") |> :erlang.binary_to_term
-
-  # /data dir is persisted between reboots on nerves
-  # use some kind of config to make that work :)
-  #
-
   def init(:ok) do
     IO.puts("Init")
-    # read the config
+
+    lights = Light.initial_state_from_db()
+
     Phoenix.PubSub.subscribe(@server, "events")
     Phoenix.PubSub.subscribe(@server, "dmx")
 
-    lights = %{
-      :living => %Light{
-        ui_name: "licht bureau",
-        ui_group: "leefruimte",
-        ui_order: 1,
-        r: 0,
-        g: 0,
-        b: 0,
-        w: 190,
-        default_w: 120,
-        default_r: 10,
-        default_g: 20,
-        default_b: 50,
-        dmx_channel_w: 0,
-        dmx_channel_r: 5,
-        dmx_channel_g: 3,
-        dmx_channel_b: 4,
-        rgb: true,
-        rgbval: "FF0000"
-      },
-      :kitchen => %Light{
-        ui_name: "keukeneiland",
-        ui_group: "leefruimte",
-        ui_order: 2,
-        r: 0,
-        g: 0,
-        b: 0,
-        w: 220,
-        default_w: 200,
-        dmx_channel_w: 1,
-        rgb: false
-      },
-      :bathroom => %Light{
-        ui_name: "bathroom light",
-        ui_group: "badkamer",
-        ui_order: 3,
-        r: 0,
-        g: 0,
-        b: 0,
-        w: 90,
-        default_w: 240,
-        dmx_channel_w: 9,
-        rgb: false
-      }
-    }
-
-    Phoenix.PubSub.broadcast(@server, "events", :get_state)
+    # Phoenix.PubSub.broadcast(@server, "events", :get_state)
 
     {:ok, lights}
+  end
+
+  def refresh_state_from_db() do
+    lights = Light.initial_state_from_db()
+    Phoenix.PubSub.broadcast(@server, "events", {:state, lights})
   end
 
   def handle_info({:state, lights}, state) do
@@ -117,39 +71,46 @@ defmodule Ui do
     {:noreply, state}
   end
 
-  def handle_info({:off, {id, colour}}, state) do
-    IO.puts("handling off for #{id} in #{colour}")
+  def handle_info({:off, {id}}, state) do
+    Logger.debug("handling off for #{id}")
     id = String.to_existing_atom(id)
-    colour = String.to_existing_atom(colour)
-    IO.inspect(state)
-    IO.inspect(id)
-    IO.inspect(Map.get(state, id))
 
     {_, state} =
-      Map.get_and_update(state, id, fn current ->
-        updatedkw = Map.put(current, colour, 0)
-        {current, updatedkw}
-      end)
+      if state[id].rgb == false do
+        Map.get_and_update(state, id, fn current ->
+          updatedkw = Map.put(current, :w, 0)
+          {current, updatedkw}
+        end)
+      else
+        Map.get_and_update(state, id, fn current ->
+          updatedkw = Map.put(current, :r, 0) |> Map.put(:g, 0) |> Map.put(:b, 0)
+          {current, updatedkw}
+        end)
+      end
 
     Phoenix.PubSub.broadcast(@server, @channel, {:state, state})
-
     {:noreply, state}
   end
 
-  def handle_info({:on, {id, colour}}, state) do
-    IO.puts("handling on for #{id} in #{colour}")
+  def handle_info({:on, {id}}, state) do
+    Logger.debug("handling on for #{id}")
+    {r, g, b, w } = Light.get_default_values(id) |> IO.inspect(label: "default rgbw")
     id = String.to_existing_atom(id)
-    colour = String.to_existing_atom(colour)
 
     {_, state} =
-      Map.get_and_update(state, id, fn current ->
-        default = Map.get(current, :default_w)
-        updatedkw = Map.put(current, colour, default)
-        {current, updatedkw}
+      if state[id].rgb == false do
+        Map.get_and_update(state, id, fn current ->
+          updatedkw = Map.put(current, :w, w)
+          {current, updatedkw}
       end)
+      else
+        Map.get_and_update(state, id, fn current ->
+          updatedkw = Map.put(current, :r, r) |> Map.put(:g, g) |> Map.put(:b, b)
+          {current, updatedkw}
+        end)
+      end
 
     Phoenix.PubSub.broadcast(@server, @channel, {:state, state})
-
     {:noreply, state}
   end
 
@@ -160,8 +121,8 @@ defmodule Ui do
     light = state[id_atom]
 
     cond do
-      Map.get(light, :w) == 0 -> Phoenix.PubSub.broadcast(@server, @channel, {:on, {id, "w"}})
-      Map.get(light, :w) != 0 -> Phoenix.PubSub.broadcast(@server, @channel, {:off, {id, "w"}})
+      Map.get(light, :w) == 0 && Map.get(light, :r) == 0 && Map.get(light, :g) == 0 && Map.get(light, :b) == 0 -> Phoenix.PubSub.broadcast(@server, @channel, {:on, {id}})
+      Map.get(light, :w) != 0 || Map.get(light, :r) != 0 || Map.get(light, :g) != 0 || Map.get(light, :b) != 0 -> Phoenix.PubSub.broadcast(@server, @channel, {:off, {id}})
     end
 
     {:noreply, state}
@@ -240,7 +201,7 @@ defmodule Ui do
 
   def handle_info({:button, pin_number}, state) do
     Logger.info("Button pin #{pin_number} pressed - received broadcast!")
-    Light.Action.apply_action(pin_number)
+    Action.apply_action(pin_number)
     {:noreply, state}
   end
 

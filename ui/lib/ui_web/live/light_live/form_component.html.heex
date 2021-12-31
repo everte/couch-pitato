@@ -1,0 +1,72 @@
+<div>
+  <h2><%= @title %></h2>
+
+  <.form
+    let={f}
+    for={@changeset}
+    id="light-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save">
+  
+    <%= label f, :name %>
+    <%= text_input f, :name %>
+    <%= error_tag f, :name %>
+  
+    <%= label f, :ui_name %>
+    <%= text_input f, :ui_name %>
+    <%= error_tag f, :ui_name %>
+  
+    <%= label f, :ui_group_name %>
+    <%= text_input f, :ui_group_name %>
+    <%= error_tag f, :ui_group_name %>
+  
+    <%= label f, :ui_group_order %>
+    <%= number_input f, :ui_group_order %>
+    <%= error_tag f, :ui_group_order %>
+  
+    <%= label f, :ui_order %>
+    <%= number_input f, :ui_order %>
+    <%= error_tag f, :ui_order %>
+  
+    <%= label f, :default_w %>
+    <%= number_input f, :default_w %>
+    <%= error_tag f, :default_w %>
+  
+    <%= label f, :default_r %>
+    <%= number_input f, :default_r %>
+    <%= error_tag f, :default_r %>
+  
+    <%= label f, :default_g %>
+    <%= number_input f, :default_g %>
+    <%= error_tag f, :default_g %>
+  
+    <%= label f, :default_b %>
+    <%= number_input f, :default_b %>
+    <%= error_tag f, :default_b %>
+  
+    <%= label f, :dmx_channel_w %>
+    <%= number_input f, :dmx_channel_w %>
+    <%= error_tag f, :dmx_channel_w %>
+  
+    <%= label f, :dmx_channel_r %>
+    <%= number_input f, :dmx_channel_r %>
+    <%= error_tag f, :dmx_channel_r %>
+  
+    <%= label f, :dmx_channel_g %>
+    <%= number_input f, :dmx_channel_g %>
+    <%= error_tag f, :dmx_channel_g %>
+  
+    <%= label f, :dmx_channel_b %>
+    <%= number_input f, :dmx_channel_b %>
+    <%= error_tag f, :dmx_channel_b %>
+  
+    <%= label f, :rgb %>
+    <%= checkbox f, :rgb %>
+    <%= error_tag f, :rgb %>
+  
+    <div>
+      <%= submit "Save", phx_disable_with: "Saving..." %>
+    </div>
+  </.form>
+</div>

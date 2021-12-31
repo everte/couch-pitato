@@ -17,7 +17,7 @@ defmodule UiWeb.Router do
 
   scope "/", UiWeb do
     pipe_through :browser
-    live "/lights", Lights
+    live "/lightscontroller", Lights
 
     live "/buttons", ButtonLive.Index, :index
     live "/buttons/new", ButtonLive.Index, :new
@@ -25,6 +25,14 @@ defmodule UiWeb.Router do
 
     live "/buttons/:id", ButtonLive.Show, :show
     live "/buttons/:id/show/edit", ButtonLive.Show, :edit
+
+
+    live "/lights", LightLive.Index, :index
+    live "/lights/new", LightLive.Index, :new
+    live "/lights/:id/edit", LightLive.Index, :edit
+
+    live "/lights/:id", LightLive.Show, :show
+    live "/lights/:id/show/edit", LightLive.Show, :edit
 
     live_dashboard "/dashboard"
     get "/", PageController, :index

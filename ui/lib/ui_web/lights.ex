@@ -1,5 +1,6 @@
 defmodule UiWeb.Lights do
   use UiWeb, :live_view
+  alias Ui.Helpers.Light
 
   @server Ui.PubSub
   @channel "events"
@@ -10,13 +11,15 @@ defmodule UiWeb.Lights do
     IO.puts("Mount")
     Phoenix.PubSub.subscribe(@server, @channel)
     Phoenix.PubSub.broadcast(@server, @channel, :get_state)
-    {:ok, assign(socket, lights: %{})}
+    state = assign(socket, lights: Light.get_all_lights())
+    state = assign(state, lights_state: %{})
+    {:ok, state}
   end
 
   @impl true
   def handle_info({:state, lights}, state) do
     IO.puts("Received a lights state update")
-    state = assign(state, lights: lights)
+    state = assign(state, lights_state: lights)
     {:noreply, state}
   end
 
@@ -27,13 +30,13 @@ defmodule UiWeb.Lights do
   @impl true
   def handle_event("off", %{"key" => key, "colour" => colour}, socket) do
     IO.puts("off for key #{key} and colour #{colour}")
-    Phoenix.PubSub.broadcast(@server, @channel, {:off, {key, colour}})
+    Phoenix.PubSub.broadcast(@server, @channel, {:off, {key}})
     {:noreply, socket}
   end
 
   def handle_event("on", %{"key" => key, "colour" => colour}, socket) do
     IO.puts("on for key #{key} and colour #{colour}")
-    Phoenix.PubSub.broadcast(@server, @channel, {:on, {key, colour}})
+    Phoenix.PubSub.broadcast(@server, @channel, {:on, {key}})
     {:noreply, socket}
   end
 

@@ -19,4 +19,31 @@ defmodule Ui.FirmwareFixtures do
 
     button
   end
+
+  @doc """
+  Generate a light.
+  """
+  def light_fixture(attrs \\ %{}) do
+    {:ok, light} =
+      attrs
+      |> Enum.into(%{
+        default_b: 42,
+        default_g: 42,
+        default_r: 42,
+        default_w: 42,
+        dmx_channel_b: 42,
+        dmx_channel_g: 42,
+        dmx_channel_r: 42,
+        dmx_channel_w: 42,
+        name: "some name",
+        rgb: true,
+        ui_group_name: "some ui_group_name",
+        ui_group_order: 42,
+        ui_name: "some ui_name",
+        ui_order: 42
+      })
+      |> Ui.Firmware.create_light()
+
+    light
+  end
 end

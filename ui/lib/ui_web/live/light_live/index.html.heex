@@ -1,0 +1,61 @@
+<h1>Listing Lights</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal UiWeb.LightLive.FormComponent,
+    id: @light.id || :new,
+    title: @page_title,
+    action: @live_action,
+    light: @light,
+    return_to: Routes.light_index_path(@socket, :index) %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Ui name</th>
+      <th>Ui group name</th>
+      <th>Ui group order</th>
+      <th>Ui order</th>
+      <th>Default w</th>
+      <th>Default r</th>
+      <th>Default g</th>
+      <th>Default b</th>
+      <th>Dmx channel w</th>
+      <th>Dmx channel r</th>
+      <th>Dmx channel g</th>
+      <th>Dmx channel b</th>
+      <th>Rgb</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="lights">
+    <%= for light <- @lights do %>
+      <tr id={"light-#{light.id}"}>
+        <td><%= light.name %></td>
+        <td><%= light.ui_name %></td>
+        <td><%= light.ui_group_name %></td>
+        <td><%= light.ui_group_order %></td>
+        <td><%= light.ui_order %></td>
+        <td><%= light.default_w %></td>
+        <td><%= light.default_r %></td>
+        <td><%= light.default_g %></td>
+        <td><%= light.default_b %></td>
+        <td><%= light.dmx_channel_w %></td>
+        <td><%= light.dmx_channel_r %></td>
+        <td><%= light.dmx_channel_g %></td>
+        <td><%= light.dmx_channel_b %></td>
+        <td><%= light.rgb %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.light_show_path(@socket, :show, light) %></span>
+          <span><%= live_patch "Edit", to: Routes.light_index_path(@socket, :edit, light) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: light.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Light", to: Routes.light_index_path(@socket, :new) %></span>

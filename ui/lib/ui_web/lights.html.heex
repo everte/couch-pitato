@@ -1,9 +1,10 @@
 <%# Iterate the list of lights %>
-<%= for {key, list} <- @lights do %>
-      
+<%= for light <- @lights do %>
+     <%= key = light.name %> 
+     <%= key_as_atom = light.name |> String.to_atom %> 
       <div class="row">
         <div class="column column-50 column-offset-25">
-          <p style="text-align: center"><%= list.ui_name %> </p>
+          <p style="text-align: center"><%= light.ui_name %> </p>
         </div>
       </div>
       <div class="row">
@@ -22,10 +23,10 @@
         </button>
 
       </div>
-      <%= if list.white == true do %>
+      <%= if light.rgb == false do %>
       <div class="column column-60">
       <form phx-change="change" phx-value-key="t">
-        <input name="slider" type="range" min="0" max="255" step="8" value={Map.get(list, :w)} class="">
+        <input name="slider" type="range" min="0" max="255" step="8" value={ Map.get(@lights_state, key_as_atom, %Ui.Firmware.LightState{}) |> Map.get(:w) } class="">
         <input type="hidden" name="key" value={ key }> 
         <input type="hidden" name="colour" value={ Atom.to_string(:w) } > 
       </form>
@@ -44,11 +45,11 @@
         <button class="button"  phx-click="on" phx-value-key={ key } phx-value-colour={ :w}>on</button>  
       </div>
     </div>
-      <%= if list.rgb == true do %>
+      <%= if light.rgb == true do %>
         <div class="row">
       <div class="column column-50 column-offset-25">
       <form phx-change="change" phx-value-key={ key } >
-        <input id="colorWell" name="colour" type="color" value={ list.rgbval }>
+        <input id="colorWell" name="colour" type="color" value={ Map.get(@lights_state, key_as_atom, %Ui.Firmware.LightState{}) |> Ui.Helpers.LightState.rgbval() }>
         <input type="hidden" name="key" value={ key }> 
       </form>
       </div>
