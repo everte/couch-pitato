@@ -34,6 +34,7 @@ defmodule Ui.MixProject do
   defp deps do
     [
       {:phoenix, "~> 1.6.0"},
+      {:tailwind, "~> 0.1", runtime: Mix.env() == :dev && Mix.target() == :host},
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 0.16.0"},
@@ -62,7 +63,7 @@ defmodule Ui.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.deploy": ["esbuild default --minify", "phx.digest"]
-    ]
+      "assets.deploy": ["esbuild default --minify", "tailwind default --minify", "phx.digest"]
+      ]
   end
 end
