@@ -94,7 +94,7 @@ defmodule Ui do
 
   def handle_info({:on, {id}}, state) do
     Logger.debug("handling on for #{id}")
-    {r, g, b, w } = Light.get_default_values(id) |> IO.inspect(label: "default rgbw")
+    {r, g, b, w} = Light.get_default_values(id)
     id = String.to_existing_atom(id)
 
     {_, state} =
@@ -102,7 +102,7 @@ defmodule Ui do
         Map.get_and_update(state, id, fn current ->
           updatedkw = Map.put(current, :w, w)
           {current, updatedkw}
-      end)
+        end)
       else
         Map.get_and_update(state, id, fn current ->
           updatedkw = Map.put(current, :r, r) |> Map.put(:g, g) |> Map.put(:b, b)
@@ -121,8 +121,13 @@ defmodule Ui do
     light = state[id_atom]
 
     cond do
-      Map.get(light, :w) == 0 && Map.get(light, :r) == 0 && Map.get(light, :g) == 0 && Map.get(light, :b) == 0 -> Phoenix.PubSub.broadcast(@server, @channel, {:on, {id}})
-      Map.get(light, :w) != 0 || Map.get(light, :r) != 0 || Map.get(light, :g) != 0 || Map.get(light, :b) != 0 -> Phoenix.PubSub.broadcast(@server, @channel, {:off, {id}})
+      Map.get(light, :w) == 0 && Map.get(light, :r) == 0 && Map.get(light, :g) == 0 &&
+          Map.get(light, :b) == 0 ->
+        Phoenix.PubSub.broadcast(@server, @channel, {:on, {id}})
+
+      Map.get(light, :w) != 0 || Map.get(light, :r) != 0 || Map.get(light, :g) != 0 ||
+          Map.get(light, :b) != 0 ->
+        Phoenix.PubSub.broadcast(@server, @channel, {:off, {id}})
     end
 
     {:noreply, state}
@@ -184,7 +189,10 @@ defmodule Ui do
     id = String.to_existing_atom(id)
 
     rgbval =
-      "#" <> Integer.to_string(r, 16) <> Integer.to_string(g, 16) <> Integer.to_string(b, 16)
+      "#" <>
+        String.pad_leading(Integer.to_string(r, 16), 2, "0") <>
+        String.pad_leading(Integer.to_string(g, 16), 2, "0") <>
+        String.pad_leading(Integer.to_string(b, 16), 2, "0")
 
     {_, state} =
       Map.get_and_update(state, id, fn current ->

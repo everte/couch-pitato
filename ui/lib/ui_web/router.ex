@@ -26,7 +26,6 @@ defmodule UiWeb.Router do
     live "/buttons/:id", ButtonLive.Show, :show
     live "/buttons/:id/show/edit", ButtonLive.Show, :edit
 
-
     live "/lights", LightLive.Index, :index
     live "/lights/new", LightLive.Index, :new
     live "/lights/:id/edit", LightLive.Index, :edit

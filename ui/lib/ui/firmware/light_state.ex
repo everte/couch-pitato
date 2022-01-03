@@ -7,5 +7,6 @@ defmodule Ui.Firmware.LightState do
             dmx_channel_w: nil,
             dmx_channel_r: nil,
             dmx_channel_g: nil,
-            dmx_channel_b: nil
+            dmx_channel_b: nil,
+            rgbval: nil
 end

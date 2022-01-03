@@ -1,58 +1,55 @@
 <%# Iterate the list of lights %>
+<%# <h1 class="text-red-500 text-5xl font-bold text-center">Lights</h1> %>
+
 <%= for light <- @lights do %>
-     <%= key = light.name %> 
-     <%= key_as_atom = light.name |> String.to_atom %> 
-      <div class="row">
-        <div class="column column-50 column-offset-25">
-          <p style="text-align: center"><%= light.ui_name %> </p>
-        </div>
-      </div>
-      <div class="row">
+      <div class="font-bold text-grey-800 text-center"><%= light.ui_name %></div>
+
+      <div class="flex justify-center flex-row flex-nowrap">
       
-      <div class="column column-10">
-        <button class="button"  phx-click="off" phx-value-key={ key } phx-value-colour={:w }>
+      <div class="basis-1/6">
+        <button class="p-2 pl-5 pr-5 bg-blue-500 text-gray-100 text-lg rounded-lg focus:border-4 border-blue-300"  phx-click="off" phx-value-key={ light.name } phx-value-colour={:w }>
           Off
         </button>
-        </div>
+      </div>
 
-      <div class="column column-10">
-        <button class="button button-clear" phx-click="down" phx-value-key={ key } phx-value-colour= { :w }>
+      <%= if light.rgb == false do %>
+      <div class="basis-1/12">
+        <button class="button button-clear" phx-click="down" phx-value-key={ light.name } phx-value-colour= { :w }>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>
           </svg>
         </button>
 
       </div>
-      <%= if light.rgb == false do %>
-      <div class="column column-60">
+      
+      <div class="basis-4/12">
       <form phx-change="change" phx-value-key="t">
-        <input name="slider" type="range" min="0" max="255" step="8" value={ Map.get(@lights_state, key_as_atom, %Ui.Firmware.LightState{}) |> Map.get(:w) } class="">
-        <input type="hidden" name="key" value={ key }> 
+        <input name="slider" type="range" min="0" max="255" step="8" value={  Map.get(@lights_state, String.to_atom(light.name), %Ui.Firmware.LightState{}) |> Map.get(:w)} class="">
+        <input type="hidden" name="key" value={ light.name }> 
         <input type="hidden" name="colour" value={ Atom.to_string(:w) } > 
       </form>
       </div>
-      <% end %>
-
-      <div class="column colmun-10">
-    <button class="button button-clear" phx-click="up" phx-value-key={ key } phx-value-colour= { Atom.to_string(:w) }>
+      
+      
+      <div class="basis-1/12">
+    <button class="button button-clear" phx-click="up" phx-value-key={ light.name } phx-value-colour= { Atom.to_string(:w) }>
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
   <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
 </svg>
       </button>
       </div>
-      
-      <div class="column column-10">
-        <button class="button"  phx-click="on" phx-value-key={ key } phx-value-colour={ :w}>on</button>  
-      </div>
-    </div>
+      <% end %>
       <%= if light.rgb == true do %>
-        <div class="row">
-      <div class="column column-50 column-offset-25">
-      <form phx-change="change" phx-value-key={ key } >
-        <input id="colorWell" name="colour" type="color" value={ Map.get(@lights_state, key_as_atom, %Ui.Firmware.LightState{}) |> Ui.Helpers.LightState.rgbval() }>
-        <input type="hidden" name="key" value={ key }> 
+      <div class="basis-6/12">
+      <form phx-change="change" phx-value-key={ light.name } >
+        <input id="colorWell" name="colour" type="color" value={ Map.get(@lights_state, String.to_atom(light.name), %Ui.Firmware.LightState{}) |> Map.get(:rgbval) || Ui.Helpers.LightState.rgbval(light.default_r, light.default_g, light.default_b) }>
+        <input type="hidden" name="key" value={ light.name }> 
       </form>
       </div>
-      </div>
     <% end %>
+      
+      <div class="basis-1/6">
+        <button class="p-2 pl-5 pr-5 bg-blue-500 text-gray-100 text-lg rounded-lg focus:border-4 border-blue-300"  phx-click="on" phx-value-key={ light.name } phx-value-colour={ :w}>on</button>  
+      </div>
+    </div>
 <% end %>

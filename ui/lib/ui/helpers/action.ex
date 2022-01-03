@@ -14,6 +14,4 @@ defmodule Ui.Helpers.Action do
   def execute_action("onoff", target) do
     Phoenix.PubSub.broadcast(@server, @channel, {:onoff, {target}})
   end
-
-
 end

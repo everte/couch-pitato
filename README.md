@@ -1,23 +1,27 @@
 # Couch-pitato: Let there be light...  control the lights, with a raspberry pi, from the couch
 
-
 ## Todo
-- cleanup unused parts (old dmx, artnet, controller and old phoenix ui)
-- introduce database setup
+- Split configuration files for 'prod' and 'dev'
+- UI: arrow up/down in button so it's more mobile friendly
+- Add default css back for the default live crud pages
+- RGB ui polish
+- Better ui pages organisation
+- Introduce 'scenes' concept
+- Have RGB presets saved (to db) and accessible in ui
+- Sort UI with groups and group order
+- 'fade out' and 'fade in'
+
+
+## done
 - on/off in ui.ex make sure to handle RGB properly. Completely turn all channels on/off
-- web ui: handle on/off for al light with and without rgb
-- Configuration editor
-- Persist/read configuration
-- Sort UI
-- Save list buttons and actions
+- Create database table for lights and query this for data when needed. Then we can reduce the 'state' to only contain a struct with just RGBW for each channel.
+- Seperate lights with only W and RGB. Makes no sense to have RGBW 'lights'. With buttons we can cycle them together (if necesarry).
+- Configuration editor (done with default liveview crud! \o/)
 - Button editor/configuration
-
-
-# done
+- introduce database setup
+- cleanup unused parts (old dmx, artnet, controller and old phoenix ui)
 - Start all applications on nerves with Phoenix.PubSub
 - Handle input buttons
-
-
 
 
 ## Random thoughts
@@ -35,29 +39,8 @@ button (gpio pin id) - action - light id for action
 Represents the Light struct we use in code
 Todo: tweak and optimise after experimting
 
-id (atom) - ui_name - ui_group - ui_order - default rgbw values - dmx_channel rgbw - rgb
-```
-  defstruct ui_name: "no_name",
-            ui_group: "no_group",
-            ui_order: nil,
-            white: true,
-            rgb: nil,
-            r: 0,
-            g: 0,
-            b: 0,
-            w: 0,
-            default_w: 0,
-            default_r: 0,
-            default_g: 0,
-            default_b: 0,
-            dmx_channel_w: nil,
-            dmx_channel_r: nil,
-            dmx_channel_g: nil,
-            dmx_channel_b: nil,
-            rgbval: nil
-end
+name (atom) - ui_name - ui_group_name - ui_group_order - ui_order - default rgbw values - dmx_channel rgbw - rgb (bool)
 ```
 
-Currently the 'lights' are in memory. Either move it to the database (db call every time) or figure a way to keep states in sync. The current 'rgbw' values should not be peristed to minimize writes.
-
+Currently the 'lights' state is in memory. The dmx channel is queried once at startup. The default brightness/rgbw values are queried every request.
 

@@ -19,6 +19,7 @@ config :ui, UiWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "Oz2uSlodIbLW2I838naYScPqKYpYFzbP/cvhk9wManlpkrUVW/yBqkSTPDuDDVRx",
   watchers: [
+    tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]},
     # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
   ]

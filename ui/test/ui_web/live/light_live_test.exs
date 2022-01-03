@@ -4,9 +4,54 @@ defmodule UiWeb.LightLiveTest do
   import Phoenix.LiveViewTest
   import Ui.FirmwareFixtures
 
-  @create_attrs %{default_b: 42, default_g: 42, default_r: 42, default_w: 42, dmx_channel_b: 42, dmx_channel_g: 42, dmx_channel_r: 42, dmx_channel_w: 42, name: "some name", rgb: true, ui_group_name: "some ui_group_name", ui_group_order: 42, ui_name: "some ui_name", ui_order: 42}
-  @update_attrs %{default_b: 43, default_g: 43, default_r: 43, default_w: 43, dmx_channel_b: 43, dmx_channel_g: 43, dmx_channel_r: 43, dmx_channel_w: 43, name: "some updated name", rgb: false, ui_group_name: "some updated ui_group_name", ui_group_order: 43, ui_name: "some updated ui_name", ui_order: 43}
-  @invalid_attrs %{default_b: nil, default_g: nil, default_r: nil, default_w: nil, dmx_channel_b: nil, dmx_channel_g: nil, dmx_channel_r: nil, dmx_channel_w: nil, name: nil, rgb: false, ui_group_name: nil, ui_group_order: nil, ui_name: nil, ui_order: nil}
+  @create_attrs %{
+    default_b: 42,
+    default_g: 42,
+    default_r: 42,
+    default_w: 42,
+    dmx_channel_b: 42,
+    dmx_channel_g: 42,
+    dmx_channel_r: 42,
+    dmx_channel_w: 42,
+    name: "some name",
+    rgb: true,
+    ui_group_name: "some ui_group_name",
+    ui_group_order: 42,
+    ui_name: "some ui_name",
+    ui_order: 42
+  }
+  @update_attrs %{
+    default_b: 43,
+    default_g: 43,
+    default_r: 43,
+    default_w: 43,
+    dmx_channel_b: 43,
+    dmx_channel_g: 43,
+    dmx_channel_r: 43,
+    dmx_channel_w: 43,
+    name: "some updated name",
+    rgb: false,
+    ui_group_name: "some updated ui_group_name",
+    ui_group_order: 43,
+    ui_name: "some updated ui_name",
+    ui_order: 43
+  }
+  @invalid_attrs %{
+    default_b: nil,
+    default_g: nil,
+    default_r: nil,
+    default_w: nil,
+    dmx_channel_b: nil,
+    dmx_channel_g: nil,
+    dmx_channel_r: nil,
+    dmx_channel_w: nil,
+    name: nil,
+    rgb: false,
+    ui_group_name: nil,
+    ui_group_order: nil,
+    ui_name: nil,
+    ui_order: nil
+  }
 
   defp create_light(_) do
     light = light_fixture()

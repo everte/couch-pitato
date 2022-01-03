@@ -68,7 +68,7 @@ config :mdns_lite,
   # "nerves.local" for convenience. If more than one Nerves device is on the
   # network, delete "nerves" from the list.
 
-  host: [:hostname, "nerves"],
+  host: [:hostname, "nerves-prod"],
   ttl: 120,
 
   # Advertise the following services over mDNS.
@@ -102,7 +102,7 @@ config :mdns_lite,
 # https://hexdocs.pm/nerves/user-interfaces.html
 
 config :ui, UiWeb.Endpoint,
-  url: [host: "nerves.local"],
+  url: [host: "nerves.lan"],
   http: [port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: "HEY05EB1dFVSu6KykKHuS4rQPQzSHv4F7mGVB/gnDLrIu75wE/ytBXy2TaL3A6RA",
