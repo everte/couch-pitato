@@ -33,6 +33,7 @@ config :logger, backends: [RingLogger]
 
 if Mix.target() != :host do
   import_config "target.exs"
+  import_config "#{config_env()}.exs"
 end
 
 # https://hexdocs.pm/nerves/user-interfaces.html
