@@ -12,16 +12,14 @@ defmodule UiWeb.Lights do
     IO.puts("Mount")
     Phoenix.PubSub.subscribe(@server, @channel)
     state = assign(socket, lights: Light.get_all_lights())
-    state = assign(state, lights_state: %{})
+    state = assign(state, lights_state: %Ui.Firmware.LightState{})
     Phoenix.PubSub.broadcast(@server, @channel, :get_state)
     {:ok, state}
   end
 
   @impl true
   def handle_info({:state, lights}, state) do
-    IO.puts("Received a lights state update")
     Logger.debug("recevide lights state update in lights.ex:")
-    IO.inspect(lights)
     state = assign(state, lights_state: lights)
     {:noreply, state}
   end

@@ -42,9 +42,18 @@
       <%= if light.rgb == true do %>
       <div class="basis-6/12">
       <form phx-change="change" phx-value-key={ light.name } >
-        <input id="colorWell" name="colour" type="color" value={ Map.get(@lights_state, String.to_atom(light.name), %Ui.Firmware.LightState{}) |> Map.get(:rgbval) || Ui.Helpers.LightState.rgbval(light.default_r, light.default_g, light.default_b) }>
+        <%# <input id="colorWell" name="colour" type="color" value={ Map.get(@lights_state, String.to_atom(light.name), %Ui.Firmware.LightState{}) |> Map.get(:rgbval) || Ui.Helpers.LightState.rgbval(light.default_r, light.default_g, light.default_b) }> %>
+      <%# <input type="text" data-coloris value={ Map.get(@lights_state, String.to_atom(light.name), %Ui.Firmware.LightState{}) |> Map.get(:rgbval) || Ui.Helpers.LightState.rgbval(light.default_r, light.default_g, light.default_b) }> %>
         <input type="hidden" name="key" value={ light.name }> 
+        <input readonly="readonly"  style={"background: #{ Map.get(@lights_state, String.to_atom(light.name), %Ui.Firmware.LightState{}) |> Map.get(:rgbval) }"} 
+        type="text" name="colour" id="testcolour" data-coloris value={ Map.get(@lights_state, String.to_atom(light.name),  %Ui.Firmware.LightState{}) |> Map.get(:rgbval) }>
+        
+        <script>
+
+        Coloris({el: '.testcolour', alpha: false, focusInput: false})
+        </script>
       </form>
+
       </div>
     <% end %>
       

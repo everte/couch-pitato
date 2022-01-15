@@ -1,7 +1,6 @@
 # Couch-pitato: Let there be light...  control the lights, with a raspberry pi, from the couch
 
 ## Todo
-- Split configuration files for 'prod' and 'dev'
 - UI: arrow up/down in button so it's more mobile friendly
 - Add default css back for the default live crud pages
 - RGB ui polish
@@ -13,6 +12,7 @@
 
 
 ## done
+- Split configuration files for 'prod' and 'dev'
 - on/off in ui.ex make sure to handle RGB properly. Completely turn all channels on/off
 - Create database table for lights and query this for data when needed. Then we can reduce the 'state' to only contain a struct with just RGBW for each channel.
 - Seperate lights with only W and RGB. Makes no sense to have RGBW 'lights'. With buttons we can cycle them together (if necesarry).
