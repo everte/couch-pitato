@@ -64,7 +64,8 @@ defmodule Firmware.Dmx do
   end
 
   def handle_cast({:send_dmx}, %{dmx_data: dmx_data, uart_pid: uart_pid} = state) do
-    Logger.debug("sending dmx in handle_cast :send_dmx with data")
+    # handle cast for send_dmx is send every 50ms, do not update log
+    # Logger.debug("sending dmx in handle_cast :send_dmx with data")
 
     try do
       Circuits.UART.send_break(uart_pid, 12)
