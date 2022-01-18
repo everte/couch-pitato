@@ -13,6 +13,8 @@ defmodule UiWeb.Lights do
     Phoenix.PubSub.subscribe(@server, @channel)
     state = assign(socket, lights: Light.get_all_lights())
     state = assign(state, lights_state: %Ui.Firmware.LightState{})
+    state = assign(state, testcolour: "00ff00")
+    state = push_event(state, "colors", %{colors: ["#00ff00", "#123456"]})
     Phoenix.PubSub.broadcast(@server, @channel, :get_state)
     {:ok, state}
   end
