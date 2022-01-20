@@ -1,0 +1,20 @@
+<div>
+  <h2><%= @title %></h2>
+
+  <.form
+    let={f}
+    for={@changeset}
+    id="colour-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save">
+  
+    <%= label f, :hex %>
+    <%= text_input f, :hex %>
+    <%= error_tag f, :hex %>
+  
+    <div>
+      <%= submit "Save", phx_disable_with: "Saving..." %>
+    </div>
+  </.form>
+</div>

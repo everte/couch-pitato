@@ -1,0 +1,35 @@
+<h1>Listing Colours</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal UiWeb.ColourLive.FormComponent,
+    id: @colour.id || :new,
+    title: @page_title,
+    action: @live_action,
+    colour: @colour,
+    return_to: Routes.colour_index_path(@socket, :index) %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Hex</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="colours">
+    <%= for colour <- @colours do %>
+      <tr id={"colour-#{colour.id}"}>
+        <td><%= colour.hex %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.colour_show_path(@socket, :show, colour) %></span>
+          <span><%= live_patch "Edit", to: Routes.colour_index_path(@socket, :edit, colour) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: colour.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Colour", to: Routes.colour_index_path(@socket, :new) %></span>

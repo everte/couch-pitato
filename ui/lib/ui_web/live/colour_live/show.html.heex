@@ -1,0 +1,22 @@
+<h1>Show Colour</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal UiWeb.ColourLive.FormComponent,
+    id: @colour.id,
+    title: @page_title,
+    action: @live_action,
+    colour: @colour,
+    return_to: Routes.colour_show_path(@socket, :show, @colour) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Hex:</strong>
+    <%= @colour.hex %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.colour_show_path(@socket, :edit, @colour), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.colour_index_path(@socket, :index) %></span>

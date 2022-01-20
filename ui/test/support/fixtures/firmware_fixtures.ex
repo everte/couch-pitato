@@ -46,4 +46,18 @@ defmodule Ui.FirmwareFixtures do
 
     light
   end
+
+  @doc """
+  Generate a colour.
+  """
+  def colour_fixture(attrs \\ %{}) do
+    {:ok, colour} =
+      attrs
+      |> Enum.into(%{
+        hex: "some hex"
+      })
+      |> Ui.Firmware.create_colour()
+
+    colour
+  end
 end

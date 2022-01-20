@@ -33,6 +33,13 @@ defmodule UiWeb.Router do
     live "/lights/:id", LightLive.Show, :show
     live "/lights/:id/show/edit", LightLive.Show, :edit
 
+    live "/colours", ColourLive.Index, :index
+    live "/colours/new", ColourLive.Index, :new
+    live "/colours/:id/edit", ColourLive.Index, :edit
+
+    live "/colours/:id", ColourLive.Show, :show
+    live "/colours/:id/show/edit", ColourLive.Show, :edit
+
     live_dashboard "/dashboard"
     get "/", PageController, :index
   end

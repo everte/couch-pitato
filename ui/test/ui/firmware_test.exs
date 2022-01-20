@@ -191,4 +191,58 @@ defmodule Ui.FirmwareTest do
       assert %Ecto.Changeset{} = Firmware.change_light(light)
     end
   end
+
+  describe "colours" do
+    alias Ui.Firmware.Colour
+
+    import Ui.FirmwareFixtures
+
+    @invalid_attrs %{hex: nil}
+
+    test "list_colours/0 returns all colours" do
+      colour = colour_fixture()
+      assert Firmware.list_colours() == [colour]
+    end
+
+    test "get_colour!/1 returns the colour with given id" do
+      colour = colour_fixture()
+      assert Firmware.get_colour!(colour.id) == colour
+    end
+
+    test "create_colour/1 with valid data creates a colour" do
+      valid_attrs = %{hex: "some hex"}
+
+      assert {:ok, %Colour{} = colour} = Firmware.create_colour(valid_attrs)
+      assert colour.hex == "some hex"
+    end
+
+    test "create_colour/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Firmware.create_colour(@invalid_attrs)
+    end
+
+    test "update_colour/2 with valid data updates the colour" do
+      colour = colour_fixture()
+      update_attrs = %{hex: "some updated hex"}
+
+      assert {:ok, %Colour{} = colour} = Firmware.update_colour(colour, update_attrs)
+      assert colour.hex == "some updated hex"
+    end
+
+    test "update_colour/2 with invalid data returns error changeset" do
+      colour = colour_fixture()
+      assert {:error, %Ecto.Changeset{}} = Firmware.update_colour(colour, @invalid_attrs)
+      assert colour == Firmware.get_colour!(colour.id)
+    end
+
+    test "delete_colour/1 deletes the colour" do
+      colour = colour_fixture()
+      assert {:ok, %Colour{}} = Firmware.delete_colour(colour)
+      assert_raise Ecto.NoResultsError, fn -> Firmware.get_colour!(colour.id) end
+    end
+
+    test "change_colour/1 returns a colour changeset" do
+      colour = colour_fixture()
+      assert %Ecto.Changeset{} = Firmware.change_colour(colour)
+    end
+  end
 end
