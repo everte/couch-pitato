@@ -3,7 +3,7 @@ defmodule Ui.Firmware.Colour do
   import Ecto.Changeset
 
   schema "colours" do
-    field :hex, :string
+    field(:hex, :string)
 
     timestamps()
   end

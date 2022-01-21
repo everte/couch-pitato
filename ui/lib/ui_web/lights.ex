@@ -3,8 +3,6 @@ defmodule UiWeb.Lights do
   use UiWeb, :live_view
   alias Ui.Helpers.Light
   alias Ui.Firmware
-  alias Ui.Firmware.Colour
-
 
   @server Ui.PubSub
   @channel "events"
@@ -17,20 +15,25 @@ defmodule UiWeb.Lights do
     state = assign(socket, lights: Light.get_all_lights())
     state = assign(state, lights_state: %Ui.Firmware.LightState{})
     state = assign(state, testcolour: "00ff00")
-    state = push_event(state, "colors", %{colors: get_colours() })
+    state = push_event(state, "colors", %{colors: get_colours()})
     Phoenix.PubSub.broadcast(@server, @channel, :get_state)
     {:ok, state}
   end
 
   def get_colours() do
     Ui.Firmware.list_colours()
-    |> Enum.map(fn  light ->  light.hex end)
+    |> Enum.map(fn light -> light.hex end)
   end
 
   @impl true
   def handle_info({:state, lights}, state) do
     Logger.debug("recevide lights state update in lights.ex:")
     state = assign(state, lights_state: lights)
+    {:noreply, state}
+  end
+
+  def handle_info({:fav_colours, colours}, state) do
+    state = push_event(state, "colors", %{colors: colours})
     {:noreply, state}
   end
 
@@ -82,16 +85,15 @@ defmodule UiWeb.Lights do
     {:noreply, socket}
   end
 
-  def handle_event("like_colour", %{ "hex" => colour} = col, socket) do
+  def handle_event("like_colour", %{"hex" => colour} = col, socket) do
     Logger.info("Liked colour #{colour}")
-    # col = %Colour{}
-    # col = %{col | hex: colour}
+
     case Firmware.create_colour(col) do
       {:ok, _} -> Logger.debug("successfully inserted new colour")
       {:error, _} -> Logger.debug("error inserting colour")
     end
 
-    socket = push_event(socket, "colors", %{colors: get_colours() })
+    Phoenix.PubSub.broadcast(@server, @channel, {:fav_colours, get_colours()})
     {:noreply, socket}
   end
 

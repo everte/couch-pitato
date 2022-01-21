@@ -6,12 +6,12 @@
 - RGB ui polish
 - Better ui pages organisation
 - Introduce 'scenes' concept
-- Have RGB presets saved (to db) and accessible in ui
 - Sort UI with groups and group order
 - 'fade out' and 'fade in'
 
 
 ## done
+- Have RGB presets saved (to db) and accessible in ui
 - Split configuration files for 'prod' and 'dev'
 - on/off in ui.ex make sure to handle RGB properly. Completely turn all channels on/off
 - Create database table for lights and query this for data when needed. Then we can reduce the 'state' to only contain a struct with just RGBW for each channel.
