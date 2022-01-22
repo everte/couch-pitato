@@ -1,7 +1,8 @@
 import Config
 
 config :ui, Ui.Repo,
-  database: "db.db",
+  #database: "db.db",
+  database: "assets/db/db.db",
   journal_mode: :off
 
 # For development, we disable any cache and enable

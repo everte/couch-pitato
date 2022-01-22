@@ -1,5 +1,19 @@
 # Couch-pitato: Let there be light...  control the lights, with a raspberry pi, from the couch
 
+## How to upgrade 'production' system
+
+In `ui` module run `mix assets.deploy`
+
+In `firmware`:
+
+`MIX_TARGET=rpi4 MIX_ENV=prod mix firmware`
+
+(note when the nerves target is not up-to-date, make sure to also use MIX_TARGET in the mix deps.get and deps.update ;))
+
+And finally push the new version:
+
+`MIX_TARGET=rpi4 MIX_ENV=prod mix upload nerves-prod.local`
+
 ## Todo
 - UI: arrow up/down in button so it's more mobile friendly
 - Add default css back for the default live crud pages
