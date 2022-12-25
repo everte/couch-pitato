@@ -45,7 +45,7 @@ defmodule UiWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {UiWeb.LayoutView, "live.html"}
+        layout: {UiWeb.LayoutView, :live}
 
       unquote(view_helpers())
     end
