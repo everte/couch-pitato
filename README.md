@@ -15,13 +15,18 @@ And finally push the new version:
 `MIX_TARGET=rpi4 MIX_ENV=prod mix upload nerves-prod.local`
 
 ## Todo
+- Add documentation sqlite backup
+- UI: fade buttons that make no sense, this will also fix the ui issue that it's invisible that rgb is on
+- Everything off
 - UI: arrow up/down in button so it's more mobile friendly
 - Add default css back for the default live crud pages
 - RGB ui polish
 - Better ui pages organisation
+- Sqlite stream backup with litestream?
 - Introduce 'scenes' concept
 - Sort UI with groups and group order
 - 'fade out' and 'fade in'
+- Wake up alarm by fading in light over x time
 
 
 ## done
