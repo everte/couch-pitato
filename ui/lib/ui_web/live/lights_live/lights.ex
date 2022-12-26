@@ -1,4 +1,5 @@
-defmodule UiWeb.Lights do
+# defmodule UiWeb.Lights do
+defmodule UiWeb.LightsLive.Lights do
   require Logger
   use UiWeb, :live_view
   alias Ui.Helpers.Light
@@ -12,16 +13,29 @@ defmodule UiWeb.Lights do
   def mount(_params, _session, socket) do
     IO.puts("Mount")
     Phoenix.PubSub.subscribe(@server, @channel)
-    state = assign(socket, lights: Light.get_all_lights())
+    state = assign(socket, lights: Light.get_all_lights_grouped_sorted())
     state = assign(state, lights_state: %Ui.Firmware.LightState{})
-    state = push_event(state, "colors", %{colors: get_colours() })
+    state = push_event(state, "colors", %{colors: get_colours()})
     Phoenix.PubSub.broadcast(@server, @channel, :get_state)
     {:ok, state}
   end
 
   def get_colours() do
     Ui.Firmware.list_colours()
-    |> Enum.map(fn  light ->  light.hex end)
+    |> Enum.map(fn light -> light.hex end)
+  end
+
+  def is_light_on(light, state) do
+    value =
+      if light.rgb == false do
+        value =
+          Map.get(state, String.to_atom(light.name), %Ui.Firmware.LightState{}) |> Map.get(:w)
+      else
+        map = Map.get(state, String.to_atom(light.name), %Ui.Firmware.LightState{})
+        map.r + map.g + map.b
+      end
+
+    value != 0
   end
 
   @impl true
@@ -84,12 +98,15 @@ defmodule UiWeb.Lights do
     {:noreply, socket}
   end
 
-  def handle_event("like_colour", %{ "hex" => colour} = col, socket) do
+  def handle_event("like_colour", %{"hex" => colour} = col, socket) do
     Logger.info("Liked colour #{colour}")
+    socket = put_flash(socket, :info, "Colour like saved")
+
     case Firmware.create_colour(col) do
       {:ok, _} -> Logger.debug("successfully inserted new colour")
       {:error, _} -> Logger.debug("error inserting colour")
     end
+
     Phoenix.PubSub.broadcast(@server, @channel, {:fav_colours, get_colours()})
     {:noreply, socket}
   end

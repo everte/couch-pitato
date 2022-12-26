@@ -11,7 +11,22 @@ defmodule Ui.Helpers.Light do
   # end
 
   def get_all_lights() do
-    Light |> Repo.all()
+    Light
+    |> Repo.all()
+  end
+
+  def get_all_lights_grouped_sorted() do
+    get_all_lights()
+    |> Enum.group_by(fn light -> light.ui_group_name end)
+    |> Map.values()
+    |> Enum.sort_by(
+      fn lights ->
+        l = hd(lights)
+        l.ui_group_order
+      end,
+      :asc
+    )
+    |> Enum.map(fn lights -> Enum.sort_by(lights, & &1.ui_order, :asc) end)
   end
 
   def initial_state_from_db() do
